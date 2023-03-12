@@ -1,0 +1,16 @@
+---
+# tasks file for vector-role
+- name: Install vector
+  hosts: vector
+  tasks:
+    - name: Get vector distrib
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/{{ vector_major_version }}/vector-{{ vector_minor_version }}.{{ vector_arch }}.rpm"
+        dest: ./vector-{{ vector_minor_version }}.{{ vector_arch }}.rpm
+    - name: Install vector packages
+      ansible.builtin.yum:
+        name:
+          - vector-{{ vector_minor_version }}.{{ vector_arch }}.rpm
+      ignore_errors: "{{ ansible_check_mode }}"
+      tags: vector
+      become: true
