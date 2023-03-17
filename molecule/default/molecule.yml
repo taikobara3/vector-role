@@ -1,0 +1,32 @@
+---
+dependency:
+  name: galaxy
+  options:
+    role-file: molecule/default/requirements.yml
+driver:
+  name: docker
+platforms:
+  - name: instance-1
+    image: docker.io/tgagor/centos:7
+    pre_build_image: true
+  - name: instance-2
+    image: docker.io/tgagor/centos:8
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+scenario:
+  name: default
+  test_sequence:
+    - lint
+    - destroy
+#    - dependency
+    - syntax
+    - create
+#    - prepare
+    - converge
+    - idempotence
+#    - side_effect
+    - verify
+    - destroy

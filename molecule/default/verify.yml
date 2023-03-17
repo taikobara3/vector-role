@@ -1,0 +1,33 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: false
+  vars:
+    vector_package:
+      - 'vector'
+  tasks:
+
+    - name: "stat execute vector exists"
+      stat:
+        path: "/usr/bin/vector"
+      register: file_txt_stat
+
+    - name: "Check execute vector exists"
+      assert:
+        that:
+          - file_txt_stat.stat.exists == True
+        success_msg: "vector exists"
+        fail_msg: "vector doesn't exist"
+
+    - name: 'Gather Installed Packages'
+      ansible.builtin.package_facts:
+        manager: auto
+      become: true
+
+    - name: 'Assert Vector Packages'
+      ansible.builtin.assert:
+        that:
+          - "'{{ item }}' in ansible_facts.packages"
+      loop: "{{ vector_package }}"
